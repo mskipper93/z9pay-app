@@ -19,10 +19,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install and Build
+- name: Install and Sync Capacitor
         run: |
           npm install
-          # Always use npx to avoid permission errors
+          # Always use npx to invoke the local Capacitor CLI
           npx cap sync android
           
       - name: Compile Android
