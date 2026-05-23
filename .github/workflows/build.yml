@@ -1,4 +1,4 @@
-name: Compile Z9Pay Mobile App Packages
+name: Build Android Binaries
 on: [push, workflow_dispatch]
 
 jobs:
@@ -8,30 +8,27 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-- name: Install and Sync Capacitor
+      - name: Setup Environment
         run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jdk nodejs npm
+          # Ensure Capacitor CLI is available without global install issues
           npm install
-          # Always use npx to invoke the local Capacitor CLI
+
+      - name: Sync Capacitor
+        run: |
+          # Use npx to ensure we use the local version in your node_modules
           npx cap sync android
-          
-      - name: Compile Android
+
+      - name: Build and Package
         run: |
           cd android
+          # Explicitly fix permissions for the wrapper
           chmod +x gradlew
+          # Build both APK and AAB
           ./gradlew assembleDebug bundleRelease
 
-      - name: Upload Binaries
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Z9Pay-Binaries
