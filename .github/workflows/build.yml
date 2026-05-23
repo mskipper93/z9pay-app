@@ -22,20 +22,19 @@ jobs:
       - name: Install and Build
         run: |
           npm install
-          # Explicitly install the CLI to ensure it is available in PATH
-          npm install -g @capacitor/cli
-          # Sync to generate the android folder
+          # Always use npx to avoid permission errors
           npx cap sync android
           
       - name: Compile Android
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug bundleRelease
 
-      - name: Upload Binary
+      - name: Upload Binaries
         uses: actions/upload-artifact@v4
         with:
-          name: Z9Pay-Build
-          path: android/app/build/outputs/apk/debug/app-debug.apk
-          android/app/build/outputs/bundle/release/app-release.aab
+          name: Z9Pay-Binaries
+          path: |
+            android/app/build/outputs/apk/debug/app-debug.apk
+            android/app/build/outputs/bundle/release/app-release.aab
