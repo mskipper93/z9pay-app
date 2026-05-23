@@ -8,7 +8,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-- name: Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -19,23 +19,23 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-- name: Install and Sync Capacitor
+      - name: Install and Build
         run: |
           npm install
-          # 'npx' is mandatory here to bypass the permission denied error
+          # Explicitly install the CLI to ensure it is available in PATH
+          npm install -g @capacitor/cli
+          # Sync to generate the android folder
           npx cap sync android
-
-      - name: Build Android
+          
+      - name: Compile Android
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
-          ./gradlew bundleRelease
 
-      - name: Upload Binaries
+      - name: Upload Binary
         uses: actions/upload-artifact@v4
         with:
-          name: Z9Pay-Binaries
-          path: |
-            android/app/build/outputs/apk/debug/app-debug.apk
-            android/app/build/outputs/bundle/release/app-release.aab
+          name: Z9Pay-Build
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          android/app/build/outputs/bundle/release/app-release.aab
