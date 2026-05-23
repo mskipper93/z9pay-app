@@ -1,0 +1,13 @@
+{
+  "appId": "com.z9payweb.app",
+  "appName": "Z9Pay",
+  "webDir": "www",
+  "server": {
+    "url": "https://z9payweb.com.ng",
+    "allowNavigation": ["z9payweb.com.ng"]
+  },
+  "android": {
+    "allowMixedContent": true,
+    "hardwareAccelerated": true
+  }
+}
